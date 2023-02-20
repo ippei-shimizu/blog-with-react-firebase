@@ -1,6 +1,6 @@
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 import "./Home.css";
 
 const Home = () => {
@@ -16,7 +16,7 @@ const Home = () => {
 
   const handleDelete = async (id) => {
     await deleteDoc(doc(db, "posts", id));
-    window.location.href = "/"
+    window.location.href = "/";
   };
 
   return (
@@ -30,7 +30,9 @@ const Home = () => {
             <div className="postTextContainer">{post.postsText}</div>
             <div className="nameAndDeleteButton">
               <h2>@{post.author.username}</h2>
-              <button onClick={() => handleDelete(post.id)}>削除</button>
+              {post.author.username === auth.currentUser.uid && (
+                <button onClick={() => handleDelete(post.id)}>削除</button>
+              )}
             </div>
           </div>
         );
